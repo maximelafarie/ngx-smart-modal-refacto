@@ -1,170 +1,162 @@
-# angular-library-starter
-[![Build Status](https://travis-ci.org/robisim74/angular-library-starter.svg?branch=master)](https://travis-ci.org/robisim74/angular-library-starter)
->Build an Angular library compatible with AoT compilation &amp; Tree shaking.
+# ngx-smart-modal
 
-This starter allows you to create a library for **Angular 4+** apps written in _TypeScript_, _ES6_ or _ES5_. 
-The project is based on the official _Angular_ packages.
+[![Join the chat at https://gitter.im/ngx-smart-modal/Lobby](https://badges.gitter.im/ngx-smart-modal/Lobby.svg)](https://gitter.im/ngx-smart-modal/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) 
+[![Greenkeeper badge](https://badges.greenkeeper.io/maximelafarie/ngx-smart-modal.svg)](https://greenkeeper.io/)
+[![Build Status](https://travis-ci.org/maximelafarie/ngx-smart-modal.svg?branch=master)](https://travis-ci.org/maximelafarie/ngx-smart-modal) [![npm version](https://badge.fury.io/js/ngx-smart-modal.svg)](https://badge.fury.io/js/ngx-smart-modal) [![npm downloads](https://img.shields.io/npm/dm/ngx-smart-modal.svg)](https://npmjs.org/ngx-smart-modal) [![codecov](https://codecov.io/gh/maximelafarie/ngx-smart-modal/branch/master/graph/badge.svg)](https://codecov.io/gh/maximelafarie/ngx-smart-modal)
 
-Get the [Changelog](https://github.com/robisim74/angular-library-starter/blob/master/CHANGELOG.md).
+`ngx-smart-modal` is a lightweight and very complete Angular component for managing modal inside any Angular project. It was built for modern browsers using TypeScript, SCSS, HTML5 and Angular >=4.0.0.
 
-## Contents
-* [1 Project structure](#1)
-* [2 Customizing](#2)
-* [3 Testing](#3)
-* [4 Building](#4)
-* [5 Publishing](#5)
-* [6 Documentation](#6)
-* [7 Using the library](#7)
-* [8 What it is important to know](#8)
+## Demo
+https://maximelafarie.com/ngx-smart-modal/
 
-## <a name="1"></a>1 Project structure
-- Library:
-    - **src** folder for the classes
-    - **public_api.ts** entry point for all public APIs of the package
-    - **package.json** _npm_ options
-    - **rollup.config.js** _Rollup_ configuration for building the bundles
-    - **tsconfig-build.json** _ngc_ compiler options for _AoT compilation_
-    - **build.js** building process using _ShellJS_
-- Testing:
-    - **tests** folder for unit & integration tests
-    - **karma.conf.js** _Karma_ configuration that uses _webpack_ to build the tests
-    - **spec.bundle.js** defines the files used by _webpack_
-- Extra:
-    - **tslint.json** _TypeScript_ linter rules with _Codelyzer_
-    - **travis.yml** _Travis CI_ configuration
 
-## <a name="2"></a>2 Customizing
-1. Update [Node & npm](https://docs.npmjs.com/getting-started/installing-node).
+## No external library, no jQuery! 🤘
+To avoid imposing you to download a CSS library by using this package, this one is only using [Angular animations](https://angular.io/guide/animations). So get rid off to be forced to use a CSS library you don't want to! In addition, it doesn't use jQuery too! 
 
-2. Rename `angular-library-starter` and `angularLibraryStarter` everywhere to `my-library` and `myLibrary`.
+> #### But... I'm using Bootstrap (or Materialize, Foundation or anything else)!
+> Don't panic! We already thought about that! And because we want to be the more neutral as we can, we made it very flexible for you to style it!
+> So if your app uses a CSS framework that has some modal styles, you simply have to pick up its class names and set the main class it in the `[customClasses]="modal"` (e.g.: bootstrap). And the rest of the modal DOM elements simply have to be set in the `ngx-smart-modal` component (e.g.: modal-dialog, modal-content, modal-header, etc.).
 
-3. Update in `package.json` file:
-    - version: [Semantic Versioning](http://semver.org/)
-    - description
-    - urls
-    - packages
+Check out the [documentation](https://github.com/maximelafarie/ngx-smart-modal) & [demos](https://github.com/maximelafarie/ngx-smart-modal) for more information and tutorials!
 
-    and run `npm install`.
+See the [changelog](https://github.com/maximelafarie/ngx-smart-modalchangelog.md) for recent changes.
 
-4. Create your classes in `src` folder, and export public classes in `my-library.ts`.
+## Features
+ - Handle large quantity of modals anywhere in your app
+ - Customize the style of your modals through custom CSS classes
+ - No external CSS library is used so you can easily override the modals default style
+ - Pass data to any modal, and retrieve it very simply in the modal view
+ - Events on `open`, `close` and `dismiss` for each modal
+ - Manage all your modal stack and data with very fast methods
+ - Very smart `z-index` computation (no ugly glitches or problems with a modal inside another)
+ - A modal in a modal in a modal in a modal... I guess you got it!
+ - AoT compilation support
 
-5. You can create only one _module_ for the whole library: 
-I suggest you create different _modules_ for different functions, 
-so that the user can import only those he needs and optimize _Tree shaking_ of his app.
+## Setup
+To use `ngx-smart-modal` in your project install it via [npm](https://www.npmjs.com/package/ngx-smart-modal):
+```
+npm i ngx-smart-modal --save
+```
+Then add `NgxSmartModalModule` and `NgxSmartModalService` to your project `NgModule`
+```
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
 
-6. Update in `rollup.config.js` file `globals` external dependencies with those that actually you use.
+import {AppComponent} from './app.component';
+import {NgxSmartModalModule, NgxSmartModalService} from 'ngx-smart-modal';
 
-7. Create unit & integration tests in `tests` folder, or unit tests next to the things they test in `src` folder, always using `.spec.ts` extension. 
-_Karma_ is configured to use _webpack_ only for `*.ts` files.
-
-## <a name="3"></a>3 Testing
-The following command run unit & integration tests that are in the `tests` folder, and unit tests that are in `src` folder: 
-```Shell
-npm test 
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule, NgxSmartModalModule],
+  providers: [NgxSmartModalService],
+  bootstrap: [AppComponent]
+})
+export class AppModule {
+}
 ```
 
-## <a name="4"></a>4 Building
-The following command:
-```Shell
-npm run build
+## Manipulate modals
+You can use it directly in your component's template like this
 ```
-- starts _TSLint_ with _Codelyzer_
-- starts _AoT compilation_ using _ngc_ compiler
-- creates `dist` folder with all the files of distribution
+<ngx-smart-modal #myModal [identifier]="'myModal'">
+  <h1>Title</h1>
+  <p>Some stuff...</p>
 
-To test locally the npm package:
-```Shell
-npm run pack-lib
+  <button (click)="myModal.close()">Close</button>
+</ngx-smart-modal>
 ```
-Then you can install it in an app to test it:
-```Shell
-npm install [path]my-library-[version].tgz
+At this point, the modal instance is stored in the `NgxSmartModalService`. You can do absolutely what you want with it, anywhere in your app. For example, from a component :
 ```
+import {Component} from '@angular/core';
+import {NgxSmartModalService} from 'ngx-smart-modal';
 
-## <a name="5"></a>5 Publishing
-Before publishing the first time:
-- you can register your library on [Travis CI](https://travis-ci.org/): you have already configured `.travis.yml` file
-- you must have a user on the _npm_ registry: [Publishing npm packages](https://docs.npmjs.com/getting-started/publishing-npm-packages)
-
-```Shell
-npm run publish-lib
+@Component({
+  ...
+})
+export class AppComponent {
+  constructor(public ngxSmartModalService: NgxSmartModalService) {
+  }
+}
 ```
-
-## <a name="6"></a>6 Documentation
-To generate the documentation, this starter uses [compodoc](https://github.com/compodoc/compodoc):
-```Shell
-npm run compodoc
-npm run compodoc-serve 
+Then in the AppComponent view you can open any modal with no need to be in the same view:
+```
+<button (click)="ngxSmartModalService.getModal('myModal').open()">Open myModal</button>
 ```
 
-## <a name="7"></a>7 Using the library
-### Installing
-```Shell
-npm install my-library --save 
+## Manipulate data
+You can associate data with any created modal. To do that, simply use the `setModalData()` from the `NgxSmartModalService`:
 ```
-### Loading
-#### Using SystemJS configuration
-```JavaScript
-System.config({
-    map: {
-        'my-library': 'node_modules/my-library/bundles/my-library.umd.js'
-    }
-});
+import {AfterViewInit, Component} from '@angular/core';
+import {NgxSmartModalService} from 'ngx-smart-modal';
+
+@Component({
+  ...
+})
+export class AppComponent implements AfterViewInit {
+  constructor(public ngxSmartModalService: NgxSmartModalService) {
+  }
+
+  ngAfterViewInit() {
+    const obj: Object = {
+      prop1: 'test',
+      prop2: true,
+      prop3: [{a: 'a', b: 'b'}, {c: 'c', d: 'd'}],
+      prop4: 327652175423
+    };
+
+    this.ngxSmartModalService.setModalData(obj, 'myModal');
+  }
+}
 ```
-#### Angular-CLI
-No need to set up anything, just import it in your code.
-#### Rollup or webpack
-No need to set up anything, just import it in your code.
-#### Plain JavaScript
-Include the `umd` bundle in your `index.html`:
-```Html
-<script src="node_modules/my-library/bundles/my-library.umd.js"></script>
+After that, you can retrieve the modal data directly from the view with the `getData()` modal property. To avoid any errors with unavailable data, you can use the `hasData()` modal property (It's dynamic. If data comes after a certain time its value will automatically change to `true`):
 ```
-and use global `ng.myLibrary` namespace.
+<ngx-smart-modal #myModal [identifier]="'myModal'">
+  <div *ngIf="myModal.hasData()">
+    <pre>{{ myModal.getData() | json }}</pre>
+  </div>
 
-### AoT compilation
-The library is compatible with _AoT compilation_.
+  <button (click)="myModal.close()">Close</button>
+</ngx-smart-modal>
+```
 
-## <a name="8"></a>8 What it is important to know
-1. `package.json`
+## Handle events
+`ngx-smart-modal` comes with three built-in events: `onOpen`, `onClose` and `onDismiss`.
 
-    * `"main": "./bundles/angular-library-starter.umd.js"` legacy module format 
-    * `"module": "./bundles/angular-library-starter.es5.js"` flat _ES_ module, for using module bundlers such as _Rollup_ or _webpack_: 
-    [package module](https://github.com/rollup/rollup/wiki/pkg.module)
-    * `"es2015": "./bundles/angular-library-starter.js"` _ES2015_ flat _ESM_ format, experimental _ES2015_ build
-    * `"peerDependencies"` the packages and their versions required by the library when it will be installed
+ - `onOpen`: a modal has been opened
+ - `onClose`: a modal has been closed
+ - `onDismiss`: a modal has been closed by clicking on its backdrop
 
-2. `tsconfig.json` file used by _TypeScript_ compiler
+You can handle events directly from the view...
+```
+<ngx-smart-modal #myModal [identifier]="'myModal'" (onOpen)="log('Modal opened!')" (onClose)="log('Modal closed!')" (onDismiss)="log('Modal dismissed!')">
+  <h1>Title</h1>
+  <p>Some stuff...</p>
 
-    * Compiler options:
-        * `"strict": true` enables _TypeScript_ `strict` master option
+  <button (click)="myModal.close()">Close</button>
+</ngx-smart-modal>
+```
+...and execute component's functions:
+```
+@Component({
+  ...
+})
+export class AppComponent {
+  constructor() {
+  }
 
-3. `tsconfig-build.json` file used by _ngc_ compiler
+  public log(msg: string) {
+    console.log(msg);
+  }
+```
 
-    * Compiler options:
-        * `"declaration": true` to emit _TypeScript_ declaration files
-        * `"module": "es2015"` & `"target": "es2015"` are used by _Rollup_ to create the _ES2015_ bundle
+## Contribute
+Firstly fork this repo, then clone it and go inside the root of the freshly forked project.
+`ng serve` to start the angular-cli demo.
+To modify the package, go into ./src/lib/core and do some code! 🤓
+When you finished commit and push it to your fork repo, make a PR!
+Thank you for your support, you rock! 🤘🎸
 
-    * Angular Compiler Options:
-        * `"skipTemplateCodegen": true,` skips generating _AoT_ files
-        * `"annotateForClosureCompiler": true` for compatibility with _Google Closure compiler_
-        * `"strictMetadataEmit": true` without emitting metadata files, the library will not compatible with _AoT compilation_
+## How it works
+Basically, imagine that the component is based on a service that stores any modals you create in order to let you pick them up and manage them anywhere in your app at any time.
 
-4. `rollup.config.js` file used by _Rollup_
-
-    * `format: 'umd'` the _Universal Module Definition_ pattern is used by _Angular_ for its bundles
-    * `moduleName: 'ng.angularLibraryStarter'` defines the global namespace used by _JavaScript_ apps
-    * `external` & `globals` declare the external packages
-
-5. Server-side prerendering
-
-    If you want the library will be compatible with server-side prerendering:
-    * `window`, `document`, `navigator` and other browser types do not exist on the server
-    * don't manipulate the _nativeElement_ directly
-
-## Built with this starter
-- [angular-l10n](https://github.com/robisim74/angular-l10n) *An Angular library to translate messages, dates and numbers*
-- [angular-auth-oidc-client](https://github.com/damienbod/angular-auth-oidc-client) *An OpenID Connect Implicit Flow client for Angular*
-
-## License
-MIT
+![Sequence diagram](src/assets/sequence_diagram.png)

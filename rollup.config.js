@@ -4,17 +4,20 @@ import resolve from 'rollup-plugin-node-resolve';
 const globals = {
     '@angular/core': 'ng.core',
     '@angular/common': 'ng.common',
+    '@angular/animations': 'ng.animations',
+    '@angular/platform-browser': 'ng.platformBrowser',
+    'web-animations-js': 'WaJs',
     'rxjs/Observable': 'Rx',
     'rxjs/Observer': 'Rx',
     'rxjs/add/operator/map': 'Rx'
 };
 
 export default {
-    entry: './dist/modules/angular-library-starter.es5.js',
-    dest: './dist/bundles/angular-library-starter.umd.js',
+    entry: './dist/modules/ngx-smart-modal.es5.js',
+    dest: './dist/bundles/ngx-smart-modal.umd.js',
     format: 'umd',
     exports: 'named',
-    moduleName: 'ng.angularLibraryStarter',
+    moduleName: 'ng.ngxSmartModal',
     plugins: [resolve()],
     external: Object.keys(globals),
     globals: globals,

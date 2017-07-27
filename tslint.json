@@ -9,6 +9,7 @@
             "check-interpolation",
             "check-pipe"
         ],
+        "max-line-length": [true, 10000],
         "banana-in-box": true,
         "templates-no-negated-async": true,
         "directive-selector": [
@@ -24,8 +25,7 @@
             true,
             "element",
             [
-                "cmp-prefix1",
-                "cmp-prefix2"
+                "ngx-smart-modal"
             ],
             "kebab-case"
         ],
