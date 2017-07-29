@@ -6,6 +6,7 @@ import {ModalInstance} from './modal-instance';
 export class NgxSmartModalService {
     public modalStack: ModalInstance[] = [];
     public modalData: any[] = [];
+
     /**
      * Add a new modal instance. This step is essential and allows to retrieve any modal at any time.
      * It stores an object that contains the given modal identifier and the modal itself directly in the `modalStack`.
@@ -15,14 +16,14 @@ export class NgxSmartModalService {
      * @returns {void} Returns nothing special.
      */
     public addModal(modalInstance: ModalInstance, force?: boolean): void {
-        console.log('NEW MODAL ADDED', modalInstance);
         if (force) {
-            const i: number = this.modalStack.findIndex((o: ModalInstance) => o.id === modalInstance.id);
-            /*const i: number = _.findIndex(this.modalStack, (o: ModalInstance) => {
+            const i: number = this.modalStack.findIndex((o: ModalInstance) => {
                 return o.id === modalInstance.id;
-            });*/
+            });
             if (i > -1) {
                 this.modalStack[i].modal = modalInstance.modal;
+            } else {
+                this.modalStack.push(modalInstance);
             }
             return;
         }
@@ -35,12 +36,9 @@ export class NgxSmartModalService {
      * @param {string} id The modal identifier used at creation time.
      */
     public getModal(id: string): NgxSmartModalComponent {
-        let modal: any = null;
-        this.modalStack.forEach((m: any) => m.id === id ? modal = m : false);
-        return modal;
-        /*return _.find(this.modalStack, (o: any) => {
+        return this.modalStack.filter((o: any) => {
             return o.id === id;
-        }).modal;*/
+        })[0].modal;
     }
 
     /**
@@ -64,11 +62,6 @@ export class NgxSmartModalService {
                 modals.push(o);
             }
         });
-        /*_.each(this.modalStack, (o: ModalInstance) => {
-            if (o.modal.visible) {
-                modals.push(o);
-            }
-        });*/
         return modals;
     }
 
@@ -82,9 +75,6 @@ export class NgxSmartModalService {
     public getHigherIndex(): number {
         const index: number[] = [];
         const modals: ModalInstance[] = this.getOpenedModals();
-        /*_.each(modals, (o: ModalInstance) => {
-            index.push(o.modal.layerPosition);
-        });*/
         modals.forEach((o: ModalInstance) => {
             index.push(o.modal.layerPosition);
         });
@@ -107,10 +97,12 @@ export class NgxSmartModalService {
      * @returns {Array} Returns the removed modal instance.
      */
     public removeModal(id: string): void {
-        this.modalStack.filter((o: ModalInstance) => o.id === id);
-        /*return _.remove(this.modalStack, (o: ModalInstance) => {
+        const i: number = this.modalStack.findIndex((o: any) => {
             return o.id === id;
-        });*/
+        });
+        if (i > -1) {
+            this.modalStack.splice(i, 1);
+        }
     }
 
     /**
@@ -124,16 +116,18 @@ export class NgxSmartModalService {
      * @returns {boolean} Returns true if data association succeeded, else returns false.
      */
     public setModalData(data: object | any[] | number | string | boolean, id: string): boolean {
-        if (!!this.modalStack.find((o: ModalInstance) => o.id === id)) {
-            if (!!this.modalData.find((o) => o.id === id)) {
+        if (!!this.modalStack.find((o: ModalInstance) => {
+                return o.id === id;
+            })) {
+            if (!!this.modalData.find((o) => {
+                    return o.id === id;
+                })) {
                 setTimeout(() => this.modalData[this.modalData.findIndex((o) => o.id === id)].data = data);
             } else {
                 setTimeout(() => this.modalData.push({data, id}));
             }
             return true;
         } else {
-            // console.error('No modal with the id ' + id + ' exist. Please retry.');
-            // console.warn('To assign data to a modal, it should exists.');
             return false;
         }
     }
@@ -145,12 +139,7 @@ export class NgxSmartModalService {
      * @returns {Object|Array|number|string|boolean|null} Returns the associated modal data.
      */
     public getModalData(id: string): object | any[] | number | string | boolean {
-        let data = false;
-        this.modalData.forEach((o) => o.id === id ? data = o : false);
-        return data;
-        /*return _.find(this.modalData, (o: any) => {
-            return o.id === id;
-        });*/
+        return this.modalData.filter((o: any) => o.id === id);
     }
 
     /**
@@ -169,10 +158,12 @@ export class NgxSmartModalService {
      * @returns {Array} Returns the removed data.
      */
     public resetModalData(id: string): void {
-        this.modalData.filter((o) => o.id === id);
-        /*return _.remove(this.modalData, (o: any) => {
+        const i: number = this.modalData.findIndex((o: any) => {
             return o.id === id;
-        });*/
+        });
+        if (i > -1) {
+            this.modalData.splice(i, 1);
+        }
     }
 
     /**

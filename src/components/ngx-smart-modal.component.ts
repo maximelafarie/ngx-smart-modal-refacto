@@ -88,6 +88,7 @@ export class NgxSmartModalComponent implements OnInit, OnDestroy {
     @Input() public customClass: string = '';
     @Input() public visible: boolean = false;
     @Input() public backdrop: boolean = true;
+    @Input() public force: boolean = true;
     @Output() public visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     @Output() public onClose: EventEmitter<any> = new EventEmitter();
@@ -97,6 +98,15 @@ export class NgxSmartModalComponent implements OnInit, OnDestroy {
     public layerPosition: number = 1041;
 
     constructor(private ngxSmartModalService: NgxSmartModalService) {
+    }
+
+    public ngOnInit() {
+        this.layerPosition += this.ngxSmartModalService.getModalStackCount();
+        this.ngxSmartModalService.addModal({id: this.identifier, modal: this}, this.force);
+    }
+
+    public ngOnDestroy() {
+        this.ngxSmartModalService.removeModal(this.identifier);
     }
 
     public open(top?: boolean): void {
@@ -153,15 +163,5 @@ export class NgxSmartModalComponent implements OnInit, OnDestroy {
 
     public removeData(): void {
         return this.ngxSmartModalService.resetModalData(this.identifier);
-    }
-
-    public ngOnInit() {
-        this.layerPosition += this.ngxSmartModalService.getModalStackCount();
-        console.log('COMPO THIS', this);
-        this.ngxSmartModalService.addModal({id: this.identifier, modal: this});
-    }
-
-    public ngOnDestroy() {
-        this.ngxSmartModalService.removeModal(this.identifier);
     }
 }
